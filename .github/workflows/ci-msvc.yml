@@ -37,14 +37,14 @@
             {
               "vcpkg-target-triplet" : "x86-windows-static",
               "target-arch" : "intel32",
-              "target-arch-msbuild" : "WIN32",
+              "target-arch-msbuild" : "x86",
               "executable-name" : "tvpwin32.exe",
               "compiler" : "msvc"
             },
             {
               "vcpkg-target-triplet" : "x64-windows-static",
               "target-arch" : "intel64",
-              "target-arch-msbuild" : "WIN64",
+              "target-arch-msbuild" : "x64",
               "executable-name" : "tvpwin64.exe",
               "compiler" : "msvc"
             }
@@ -69,7 +69,7 @@
         },
         {
           "name" : "Configure project",
-          "run" : "cmake -A ${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -S . -B build-cmake"
+          "run" : "cmake -DCMAKE_GENERATOR_PLATFORM=${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -S . -B build-cmake"
         },
         {
           "name" : "Build project",
