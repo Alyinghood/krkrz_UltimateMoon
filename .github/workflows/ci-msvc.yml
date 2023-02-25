@@ -69,7 +69,7 @@
         },
         {
           "name" : "Configure project",
-          "run" : "cmake -A ${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -B build-cmake"
+          "run" : "cmake -A ${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -S . -B build-cmake"
         },
         {
           "name" : "Build project",
