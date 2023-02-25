@@ -77,7 +77,7 @@
         },
         {
           "name" : "Copy executable to output folder",
-          "run" : "robocopy buildx/Release output ${{ matrix.platform.executable-name }}"
+          "run" : "robocopy build/Release output ${{ matrix.platform.executable-name }}"
         },
         {
           "name" : "Upload artifact",
