@@ -63,7 +63,9 @@
         {
           "name" : "Set up NASM",
           "uses" : "ilammy/setup-nasm@v1",
-          "version" : "2.14.03rc2"
+          "with" : {
+            "version" : "2.14.03rc2"
+          }
         },
         {
           "name" : "Set up mingw-w64 for GCC",
