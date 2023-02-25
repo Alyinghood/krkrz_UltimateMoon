@@ -37,14 +37,14 @@
             {
               "vcpkg-target-triplet" : "x86-windows-static",
               "target-arch" : "intel32",
-              "target-arch-msbuild" : "x86",
+              "target-arch-msbuild" : "WIN32",
               "executable-name" : "tvpwin32.exe",
               "compiler" : "msvc"
             },
             {
               "vcpkg-target-triplet" : "x64-windows-static",
               "target-arch" : "intel64",
-              "target-arch-msbuild" : "x64",
+              "target-arch-msbuild" : "WIN64",
               "executable-name" : "tvpwin64.exe",
               "compiler" : "msvc"
             }
