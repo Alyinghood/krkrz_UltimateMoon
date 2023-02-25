@@ -1,0 +1,101 @@
+{
+  "name" : "Continuous Integration",
+  "on" : {
+    "push" : {
+      "paths" : [
+        "**.c",
+        "**.h",
+        "**.cpp",
+        "**.hpp",
+        "**.build",
+        "**.in",
+        "**.yml",
+        "CMakeLists.txt",
+        "Makefile"
+      ]
+    },
+    "pull_request" : {
+      "paths" : [
+        "**.c",
+        "**.h",
+        "**.cpp",
+        "**.hpp",
+        "**.build",
+        "**.in",
+        "**.yml",
+        "CMakeLists.txt",
+        "Makefile"
+      ]
+    }
+  },
+  "jobs" : {
+    "build-win32-native" : {
+      "runs-on" : "ubuntu-20.04",
+      "strategy" : {
+        "matrix" : {
+          "platform" : [
+            {
+              "vcpkg-target-triplet" : "x86-windows-static",
+              "target-arch" : "intel32",
+              "target-arch-msbuild" : "x86",
+              "executable-name" : "tvpwin32.exe",
+              "compiler" : "msvc"
+            },
+            {
+              "vcpkg-target-triplet" : "x64-windows-static",
+              "target-arch" : "intel64",
+              "target-arch-msbuild" : "x64",
+              "executable-name" : "tvpwin64.exe",
+              "compiler" : "msvc"
+            }
+          ]
+        }
+      },
+      "timeout-minutes" : 30,
+      "steps" : [
+        {
+          "name" : "Checkout repository",
+          "uses" : "actions/checkout@v2",
+          "with" : {
+            "submodules" : "recursive"
+          }
+        },
+        {
+          "name" : "Set up NASM",
+          "uses" : "ilammy/setup-nasm@v1",
+          "version" : "2.14.03rc2"
+        },
+        {
+          "name" : "Set up mingw-w64 for GCC",
+          "if" : "matrix.platform.compiler == 'gcc'",
+          "run" : "brew install mingw-w64"
+        },
+        {
+          "name" : "Set up mingw-w64 for Clang",
+          "if" : "matrix.platform.compiler == 'clang'",
+          "run" : "curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-msvcrt-ubuntu-18.04-x86_64.tar.xz\ntar xvf llvm-mingw-20220906-msvcrt-ubuntu-18.04-x86_64.tar.xz\nmv llvm-mingw-20220906-msvcrt-ubuntu-18.04-x86_64 /opt/llvm-mingw\nexport PATH=\"/opt/llvm-mingw/bin:$PATH\"\necho \"/opt/llvm-mingw/bin\" >> $GITHUB_PATH"
+        },
+        {
+          "name" : "Configure project",
+          "run" : "cmake -A ${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -B build-cmake"
+        },
+        {
+          "name" : "Build project",
+          "run" : "cmake --build build-cmake --config Release"
+        },
+        {
+          "name" : "Copy executable to output folder",
+          "run" : "robocopy buildx/Release output ${{ matrix.platform.executable-name }}"
+        },
+        {
+          "name" : "Upload artifact",
+          "uses" : "actions/upload-artifact@master",
+          "with" : {
+            "name" : "binary-win32-${{ matrix.platform.target-arch }}-${{ matrix.platform.compiler }}",
+            "path" : "output/${{ matrix.platform.executable-name }}"
+          }
+        }
+      ]
+    }
+  }
+}
