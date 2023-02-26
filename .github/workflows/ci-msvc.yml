@@ -68,6 +68,14 @@
           }
         },
         {
+          "name" : "Cache vcpkg binaries",
+          "uses" : "actions/cache@v3",
+          "with" : {
+            "path" : "~/Local/AppData/vcpkg",
+            "key" : "${{ runner.os }}-vcpkg-cache"
+          }
+        },
+        {
           "name" : "Configure project",
           "run" : "cmake -DCMAKE_GENERATOR_PLATFORM=${{ matrix.platform.target-arch-msbuild }} -DVCPKG_TARGET_TRIPLET=${{ matrix.platform.vcpkg-target-triplet }} -DVCPKG_CRT_LINKAGE=static -S . -B build-cmake"
         },
