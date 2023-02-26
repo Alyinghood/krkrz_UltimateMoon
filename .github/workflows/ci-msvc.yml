@@ -84,16 +84,11 @@
           "run" : "cmake --build build-cmake --config Release"
         },
         {
-          "name" : "Copy executable to output folder",
-          "continue-on-error" : true,
-          "run" : "robocopy build-cmake/Release output ${{ matrix.platform.executable-name }}"
-        },
-        {
           "name" : "Upload artifact",
           "uses" : "actions/upload-artifact@master",
           "with" : {
             "name" : "binary-win32-${{ matrix.platform.target-arch }}-${{ matrix.platform.compiler }}",
-            "path" : "output/${{ matrix.platform.executable-name }}"
+            "path" : "build-cmake/Release/${{ matrix.platform.executable-name }}"
           }
         }
       ]
